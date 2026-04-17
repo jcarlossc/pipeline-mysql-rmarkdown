@@ -1,0 +1,15 @@
+src:
+  database: "src/db/db_connection.R"
+  data_access: "src/access_data/access_database.R"
+  standardization: "src/standardization/data_standardization.R"
+  sales: "src/metrics/sales_metric.R"
+  products: "src/metrics/products_metric.R"
+  seller: "src/metrics/seller_metrics.R"
+
+utils:
+  logger: "utils/logger/logger.R"
+  handler: "utils/error/error_handler.R"
+  helper: "utils/helper/helpers.R"
+
+logs:
+  file: "logs/app.log"
