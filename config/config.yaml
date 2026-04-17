@@ -1,0 +1,15 @@
+app:
+  name: "EDA Pipeline"
+  version: "1.0"
+
+database:
+  type: "mysql"
+  retries: 3
+  timeout: 5
+
+tables:
+  produto: "produto"
+  vendas: "vendas"
+  vendedor: "vendedor"
+
+  
