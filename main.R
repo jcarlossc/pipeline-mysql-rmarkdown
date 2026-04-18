@@ -27,5 +27,12 @@ con <- retry_manual(function() get_db_connection(), retries, timeout)
 data_tibble <- get_tables(con, config_database)
 standardization <- standardization_data(data_tibble)
 
+sales <- metric_sales(standardization)
+
+get_kpi <- list(
+  sales = sales
+)
+
+
 
 on.exit(DBI::dbDisconnect(con))
