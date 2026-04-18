@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------
-# Arquivo: error_handler.R
+# Arquivo: helpers.R
 # Pipeline baseado em R para consumo de banco de dados MySQL, 
 # Exploração de Dados e relatório R Markdown
 # Autor: Carlos da Costa
