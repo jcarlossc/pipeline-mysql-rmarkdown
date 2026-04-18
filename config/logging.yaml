@@ -8,4 +8,3 @@ format:
   timezone: "America/Recife"
   format: "[{time}] {level} - {msg}"
 
-  

@@ -7,9 +7,10 @@ src:
   seller: "src/metrics/seller_metrics.R"
 
 utils:
-  logger: "utils/logger/logger.R"
+  logger: "utils/loggers/logger.R"
   handler: "utils/error/error_handler.R"
   helper: "utils/helper/helpers.R"
 
 logs:
   file: "logs/app.log"
+
