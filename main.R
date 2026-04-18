@@ -25,6 +25,7 @@ timeout <- config_retry$database$timeout
 
 con <- retry_manual(function() get_db_connection(), retries, timeout)
 data_tibble <- get_tables(con, config_database)
-data_tibble
+standardization <- standardization_data(data_tibble)
+
 
 on.exit(DBI::dbDisconnect(con))
