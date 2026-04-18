@@ -52,53 +52,88 @@ setup_logger <- function() {
   
   tryCatch({
     
+    log_trace("Início da função setup_logger()")
+    
     # -----------------------------------------------------
     # Leitura dos arquivos de configuração
     # -----------------------------------------------------
     config_paths   <- read_yaml_safe(here::here("config", "paths.yaml"))
     config_logging <- read_yaml_safe(here::here("config", "logging.yaml"))
     
+    log_trace("Arquivos de configuração carregados com sucesso")
+    
     # -----------------------------------------------------
     # Caminho do arquivo de log
     # -----------------------------------------------------
     log_path <- here::here(config_paths$logs$file)
     
+    log_debug(glue("Caminho do arquivo de log: {log_path}"))
+    
     # -----------------------------------------------------
     # Garante que o diretório de logs exista
     # -----------------------------------------------------
+    if (!dir.exists(dirname(log_path))) {
+      log_warn("Diretório de logs não existe. Criando automaticamente.")
+    }
+    
     dir.create(dirname(log_path), recursive = TRUE, showWarnings = FALSE)
+    
+    log_trace("Diretório de logs validado/criado")
     
     # -----------------------------------------------------
     # Define o nível de log (INFO, DEBUG, ERROR, etc.)
     # Conversão feita via função helper
     # -----------------------------------------------------
-    level <- get_log_level(config_logging$logging$level)
+    level_str <- config_logging$logging$level
+    
+    log_debug(glue("Nível de log recebido do config: {level_str}"))
+    
+    level <- get_log_level(level_str)
     log_threshold(level)
+    
+    log_info(glue("Nível de log configurado para: {toupper(level_str)}"))
     
     # -----------------------------------------------------
     # Configuração de timezone para padronização dos logs
     # -----------------------------------------------------
     Sys.setenv(TZ = config_logging$format$timezone)
     
+    log_debug(glue("Timezone configurado: {config_logging$format$timezone}"))
+    
     # -----------------------------------------------------
     # Define o layout (formato) das mensagens de log
     # Exemplo: timestamp | nível | mensagem
     # -----------------------------------------------------
+    
+    log_trace("Configurando layout do logger")
+    
     log_layout(logger::layout_glue_generator(
       format = config_logging$format$format
     ))
+    
+    log_debug("Layout do logger configurado com sucesso")
     
     # -----------------------------------------------------
     # Define se o arquivo será sobrescrito ou incrementado
     # -----------------------------------------------------
     append_mode <- !isTRUE(config_logging$logging$overwrite)
     
+    if (!append_mode) {
+      log_warn("Logs serão sobrescritos a cada execução (overwrite = TRUE)")
+    } else {
+      log_trace("Modo append ativado (logs acumulativos)")
+    }
+    
     # -----------------------------------------------------
     # Configuração dos destinos do log:
     #   - Console
     #   - Arquivo
     # -----------------------------------------------------
+    log_trace("Configurando appenders (console/file)")
+    
     if (isTRUE(config_logging$logging$console)) {
+      
+      log_debug("Logger configurado para console + arquivo")
       
       logger::log_appender(function(lines) {
         logger::appender_console(lines)
@@ -107,22 +142,29 @@ setup_logger <- function() {
       
     } else {
       
+      log_debug("Logger configurado apenas para arquivo")
+      
       logger::log_appender(
         logger::appender_file(log_path, append = append_mode)
       )
     }
     
     # -----------------------------------------------------
-    # Log inicial indicando sucesso na configuração
+    # Log final indicando sucesso na configuração
     # -----------------------------------------------------
     log_info(glue("Logger iniciado | file={log_path} | level={config_logging$logging$level}"))
+    
+    log_trace("Fim da função setup_logger()")
     
   }, error = function(e) {
     
     # -----------------------------------------------------
-    # Tratamento de erro na inicialização do logger
+    # Tratamento de erro 
     # -----------------------------------------------------
-    message(glue("Erro no logger: {e$message}"))
+    log_error(glue("Erro ao configurar logger: {e$message}"))
+    
+    log_fatal("Falha crítica na inicialização do logger")
+    
     stop(e$message)
     
   })
