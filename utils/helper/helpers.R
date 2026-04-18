@@ -211,3 +211,41 @@ get_log_level <- function(level_str) {
   
   return(level)
 }
+
+
+# ---------------------------------------------------------
+# Função: safe_run
+# Descrição:
+#    A função safe_run é um wrapper de execução segura responsável por 
+# encapsular chamadas de funções críticas dentro de um mecanismo 
+# padronizado de tratamento de erros e avisos.
+#
+# Parâmetros:
+#   - expr → expressão a ser executada
+#   - step → identificador da etapa (usado em logs)
+#
+# Retorno:
+#   - O safe_run retorna exatamente o resultado da expressão (expr)
+#
+# Erros:
+#   - Erros (error)
+#       registra log com nível ERROR
+#       inclui o nome da etapa (step)
+#       interrompe a execução com stop()
+# Avisos (warning)
+#       registra log com nível WARN
+#       evita poluição do console com muffleWarning
+# ---------------------------------------------------------
+safe_run <- function(expr, step) {
+  tryCatch(
+    expr,
+    error = function(e) {
+      logger::log_error(glue::glue("❌ Erro na etapa [{step}]: {e$message}"))
+      stop(e)
+    },
+    warning = function(w) {
+      logger::log_warn(glue::glue("⚠️ Aviso na etapa [{step}]: {w$message}"))
+      invokeRestart("muffleWarning")
+    }
+  )
+}
