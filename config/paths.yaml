@@ -4,7 +4,7 @@ src:
   standardization: "src/standardization/data_standardization.R"
   sales: "src/metrics/sales_metric.R"
   products: "src/metrics/products_metric.R"
-  seller: "src/metrics/seller_metrics.R"
+  seller: "src/metrics/seller_metric.R"
 
 utils:
   logger: "utils/loggers/logger.R"
