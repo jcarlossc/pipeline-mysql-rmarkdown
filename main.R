@@ -28,11 +28,13 @@ data_tibble <- get_tables(con, config_database)
 standardization <- standardization_data(data_tibble)
 
 sales <- metric_sales(standardization)
+products <- metric_products(standardization)
 
 get_kpi <- list(
-  sales = sales
+  sales = sales,
+  products = products
 )
-
-
+get_kpi$sales
+get_kpi$products
 
 on.exit(DBI::dbDisconnect(con))
