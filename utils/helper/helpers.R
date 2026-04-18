@@ -54,16 +54,22 @@ library(yaml)
 # ----------------------------------------------------------------------
 retry_manual <- function(func, attempts, wait) {
   
+  log_trace("Início da função retry_manual()")
+  
   # --------------------------------------------------------
   # Validação dos parâmetros
   # --------------------------------------------------------
   if (!is.function(func)) {
+    log_error("Parâmetro 'func' inválido (não é função)")
     stop("Parâmetro 'func' deve ser uma função.")
   }
   
   if (attempts <= 0) {
+    log_error("Parâmetro 'attempts' inválido")
     stop("Parâmetro 'attempts' deve ser maior que zero.")
   }
+  
+  log_debug(glue("Retry configurado | attempts={attempts} | wait={wait}s"))
   
   # --------------------------------------------------------
   # Loop de tentativas
@@ -89,6 +95,7 @@ retry_manual <- function(func, attempts, wait) {
       # Não realizar retry para erros de validação
       # --------------------------------------------------------
       if (grepl("VALIDATION_ERROR", e$message)) {
+        log_error("Erro de validação detectado - abortando retries")
         stop(e)
       }
       
@@ -100,7 +107,8 @@ retry_manual <- function(func, attempts, wait) {
     # Se execução bem-sucedida, retorna resultado
     # --------------------------------------------------------
     if (!is.null(result)) {
-      log_info("Execução bem-sucedida.")
+      log_info(glue("Execução bem-sucedida na tentativa {i}"))
+      log_trace("Fim da função retry_manual()")
       return(result)
     }
     
@@ -117,6 +125,9 @@ retry_manual <- function(func, attempts, wait) {
   # Se todas as tentativas falharem, lança erro final
   # --------------------------------------------------------
   log_error(glue("Todas as {attempts} tentativas falharam"))
+  
+  log_fatal("Falha definitiva após retries")
+  
   stop(glue("Falha após {attempts} tentativas"))
 }
 
@@ -138,11 +149,26 @@ retry_manual <- function(func, attempts, wait) {
 # ---------------------------------------------------------
 read_yaml_safe <- function(path) {
   
+  log_trace(glue("Lendo arquivo YAML: {path}"))
+  
   if (!file.exists(path)) {
+    log_error(glue("Arquivo não encontrado: {path}"))
     stop(glue("Arquivo não encontrado: {path}"))
   }
   
-  yaml::read_yaml(path)
+  result <- tryCatch({
+    
+    yaml::read_yaml(path)
+    
+  }, error = function(e) {
+    
+    log_error(glue("Erro ao ler YAML: {e$message}"))
+    stop(glue("Erro ao ler YAML: {e$message}"))
+  })
+  
+  log_debug("YAML carregado com sucesso")
+  
+  return(result)
 }
 
 
@@ -172,11 +198,16 @@ get_log_level <- function(level_str) {
     FATAL = FATAL
   )
   
-  level <- levels[[toupper(level_str)]]
+  level_key <- toupper(trimws(level_str))
+  
+  level <- levels[[level_key]]
   
   if (is.null(level)) {
+    log_error(glue("Nível de log inválido: {level_str}"))
     stop(glue("Nível de log inválido: {level_str}"))
   }
   
-  level
+  log_debug(glue("Nível de log convertido: {level_key}"))
+  
+  return(level)
 }
