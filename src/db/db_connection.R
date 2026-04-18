@@ -49,25 +49,53 @@ library(glue)
 get_db_connection <- function() {
   tryCatch({
     
+    log_trace("Início da função get_db_connection()")
+    
     # -----------------------------------------------------
     # Caminho do arquivo de configuração
     # -----------------------------------------------------
     config_db <- here::here("config", "db.yaml")
     
+    log_debug(glue("Caminho do config: {config_db}"))
+    
     # -----------------------------------------------------
     # Validação de existência do arquivo
-    # Evita erro silencioso de configuração
     # -----------------------------------------------------
     if (!file.exists(config_db)) {
       log_error(glue("Arquivo não encontrado: {config_db}"))
+      log_fatal("Falha crítica: configuração do banco ausente")
       stop("Arquivo de configuração não encontrado")
     }
+    
+    log_trace("Arquivo de configuração encontrado")
     
     # -----------------------------------------------------
     # Leitura das configurações do banco
     # Estrutura esperada: db: {host, port, name, user, password}
     # -----------------------------------------------------
     db_config <- yaml::read_yaml(config_db)$db
+    
+    log_debug("Configuração YAML carregada com sucesso")
+    
+    # -----------------------------------------------------
+    # Validação de campos obrigatórios
+    # -----------------------------------------------------
+    required_fields <- c("host", "port", "name", "user", "password")
+    missing <- setdiff(required_fields, names(db_config))
+    
+    if (length(missing) > 0) {
+      log_error(glue("Campos ausentes no config: {paste(missing, collapse=', ')}"))
+      stop("Configuração inválida do banco")
+    }
+    
+    log_trace("Configuração do banco validada")
+    
+    # -----------------------------------------------------
+    # Aviso de ambiente (exemplo de WARN útil)
+    # -----------------------------------------------------
+    if (db_config$host %in% c("localhost", "127.0.0.1")) {
+      log_warn("Conectando em ambiente local (localhost)")
+    }
     
     # -----------------------------------------------------
     # Log informativo (sem expor credenciais)
@@ -90,22 +118,27 @@ get_db_connection <- function() {
       password = db_config$password
     )
     
+    log_debug("dbConnect executado sem erro")
+    
     # -----------------------------------------------------
     # Log de sucesso
     # -----------------------------------------------------
     log_info("Conexão estabelecida com sucesso")
+    
+    log_trace("Fim da função get_db_connection()")
     
     return(con)
     
   }, error = function(e) {
     
     # -----------------------------------------------------
-    # Tratamento de erro centralizado
+    # Tratamento de erro
     # -----------------------------------------------------
     log_error(glue("Erro na conexão: {e$message}"))
     
-    # Fail-fast: interrompe execução em erro crítico
-    stop(glue("Erro ao conectar ao banco: {e$message}"))  
+    log_fatal("Falha crítica ao conectar ao banco")
+    
+    stop(glue("Erro ao conectar ao banco: {e$message}")) 
     
   })
 }
