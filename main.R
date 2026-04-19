@@ -193,5 +193,3 @@ main <- function() {
   
   )
 }
-
-main()
