@@ -19,6 +19,13 @@ O objetivo é simular um cenário real de negócio, entregando insights acionáv
 
 ## 📌 Imagens DashBoard
 
+<table>
+  <tr>
+    <td><img src="https://github.com/jcarlossc/pipeline-mysql-rmarkdown/blob/main/images/dashboard/dashboard_01.png" alt="Imagem Dashboard" width="200"/> </td>
+    <td><img src="https://github.com/jcarlossc/pipeline-mysql-rmarkdown/blob/main/images/dashboard/dashboard_02.png" alt="Imagem Dashboard" width="200"/> </td>
+    <td><img src="https://github.com/jcarlossc/pipeline-mysql-rmarkdown/blob/main/images/dashboard/dashboard_03.png" alt="Imagem Dashboard" width="200"/> </td>
+  </tr>
+</table>
 
 ## 📌 Arquitetura do Projeto
 ```
