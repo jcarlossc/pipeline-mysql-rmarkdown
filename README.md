@@ -72,8 +72,6 @@ pipeline-mysql-rmarkdown/
             └── logger.R
 ```
 
-
-
 ## 📌 Tecnologias Utilizadas
 | Tecnologia | Descrição |
 | ---------- | --------- |
@@ -89,8 +87,6 @@ pipeline-mysql-rmarkdown/
 | DBI | Interface padão para banco de dados |
 | RMySQL | Drive que conecta DBI ao MySQL/MariaDB |
 | shiny | DashBoard interativo |
-
-
 
 ## 📌 Métricas Analisadas
 
@@ -108,8 +104,6 @@ O projeto trabalha com três níveis principais de análise:
 * Volume de vendas
 * Faturamento individual
 * Ranking de performance
-
-
 
 ## 📌 Pipeline de Execução
 ### 📌 Executar o processamento
@@ -143,7 +137,6 @@ DashBoard executivo com:
 * Gráficos analíticos
 * Insights estratégicos
 
-
 ## 📌 Mecanismo de Retry
 O pipeline implementa retry automático para garantir robustez em falhas de conexão:
 ```
@@ -153,8 +146,6 @@ retry:
 ```
 ✔ Evita falhas intermitentes<br>
 ✔ Aumenta confiabilidade do pipeline<br>
-
-
 
 ## 📌 Logging
 O projeto utiliza logging estruturado:<br>
@@ -181,35 +172,30 @@ Exemplo:<br>
 * Código organizado e escalável
 * Foco em insight de negócio, não apenas código
 
-
-
 ## 📌 Modo de Utilização
 
-1. clone o repositório e acesse o diretório
+### 1. clone o repositório e acesse o diretório
 ```
 git clone https://github.com/jcarlossc/pipeline-mysql-rmarkdown.git
 cd pipeline-mysql-rmarkdown
 ```
-2. Restaure as dependências:
+### 2. Restaure as dependências:
 ```
 renv::restore()
 ```
-3. Gerar relatório PDF:
+### 3. Gerar relatório PDF:
 * Acesse o arquivo do relatótio: ```pipeline-mysql-rmarkdown/report/report.Rmd``` e clique no botão ```Knit```
 * Ou, acesse o arquivo do relatótio: ```pipeline-mysql-rmarkdown/report/report.Rmd``` e use o atalho ```Ctrl + Shift + K```
 * Ou, simplesmente, no console, digite: ```rmarkdown::render("report/report.Rmd")```
 * Qualquer um desses procedimentos vai gerar um relatório em PDF
 
-4. Gerar DashBoard interativo:
+### 4. Gerar DashBoard interativo:
 * Acesse o arquivo do DashBoard: ```pipeline-mysql-rmarkdown/app/app.R``` e clique no botão ```Run App```
 * Ou, no console, digite: ```shiny::runApp("app")```
-* Após a abertura de uma janela com o DashBoard, existe um botão na parte superior que, caso queira, o DashBoard poderá ser visualizado, também no navegador. 
-
+* Após abertura de uma janela com o DashBoard, existe um botão na parte superior que, caso queira, o DashBoard poderá ser visualizado, também no navegador. 
 
 ## 📌 Licença
 Este projeto está licenciado sob MIT License.
-
-
 
 ## 📌 Contato
 * Recife, PE - Brasil
