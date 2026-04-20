@@ -186,7 +186,7 @@ Exemplo:<br>
 * Instale-o normalmente
 * Execute o Painel de Controle
 * Acione o Apache e o MySQL/MariaDB
-* Ao lado do botão start/stop, clique em Admin. Isso irá abrir a interface do MySQL/MariaDB no navegador
+* Ao lado do botão start/stop do MySQL/MariaDB, clique em Admin. Isso irá abrir a interface do MySQL/MariaDB no navegador
 * Clique na aba importar e em escolher arquivo: o script está na raiz do projeto: ```script_database/loja_informatica.sql```, após isso, clique em importar no final da página
 * O banco de Dados está com usuário ```root``` e senha vazia. O arquivo de configuração está em: ```config/db.yaml```
 
