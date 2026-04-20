@@ -2,7 +2,9 @@
 
 Pipeline completo de análise de vendas com R + R Markdown, focado em geração automatizada de relatórios executivos a partir de dados processados.
 
----
+## 📌 Relatório R Markdown
+[📄 Ver relatório completo](report/report.pdf)<br>
+[📥 Baixar relatório completo](https://github.com/jcarlossc/pipeline-mysql-rmarkdown/blob/main/report/report.pdf)
 
 ## 📌 Visão Geral
 
@@ -15,7 +17,8 @@ Este projeto implementa um fluxo profissional de análise de dados:
 
 O objetivo é simular um cenário real de negócio, entregando insights acionáveis a partir de métricas de vendas.
 
----
+## 📌 Imagens DashBoard
+
 
 ## 📌 Arquitetura do Projeto
 ```
@@ -62,12 +65,13 @@ pipeline-mysql-rmarkdown/
             └── logger.R
 ```
 
----
+
 
 ## 📌 Tecnologias Utilizadas
 | Tecnologia | Descrição |
 | ---------- | --------- |
 | R | Linguagem de programação |
+| RStudio | IDE |
 | dplyr | Manipulação de dados |
 | ggplot2 | Visualização |
 | scales | Formatação de valores |
@@ -77,8 +81,9 @@ pipeline-mysql-rmarkdown/
 | tibble | Estruturas de dados modernas |
 | DBI | Interface padão para banco de dados |
 | RMySQL | Drive que conecta DBI ao MySQL/MariaDB |
+| shiny | DashBoard interativo |
 
----
+
 
 ## 📌 Métricas Analisadas
 
@@ -97,7 +102,7 @@ O projeto trabalha com três níveis principais de análise:
 * Faturamento individual
 * Ranking de performance
 
----
+
 
 ## 📌 Pipeline de Execução
 ### 📌 Executar o processamento
@@ -112,7 +117,7 @@ Isso irá:
 * Consolida as métricas em uma lista
 * Renderizar o relatório automaticamente
 
-### 📌 Saída
+### 📌 Saída Relatório
 report.pdf
 
 Relatório executivo com:
@@ -121,7 +126,45 @@ Relatório executivo com:
 * Gráficos analíticos
 * Insights estratégicos
 
----
+### 📌 Saída DashBoard
+
+app
+
+DashBoard executivo com:
+
+* KPIs visuais
+* Gráficos analíticos
+* Insights estratégicos
+
+
+## 📌 Mecanismo de Retry
+O pipeline implementa retry automático para garantir robustez em falhas de conexão:
+```
+retry:
+  max_attempts: 3
+  wait_seconds: 5
+```
+✔ Evita falhas intermitentes<br>
+✔ Aumenta confiabilidade do pipeline<br>
+
+
+
+## 📌 Logging
+O projeto utiliza logging estruturado:<br>
+Exemplo:<br>
+```
+[2026-04-20 14:03:55.771578] INFO - Carregando configurações...
+[2026-04-20 14:03:55.898084] INFO - Carregando módulos...
+[2026-04-20 14:03:58.018395] INFO - Nível de log configurado para: INFO
+[2026-04-20 14:03:58.028467] INFO - Logger iniciado | file=C:/workspace/projects_R/pipeline-mysql-rmarkdown/logs/app.log | level=INFO
+[2026-04-20 14:03:58.035779] INFO - Pipeline iniciado
+[2026-04-20 14:03:58.04506] INFO - Conectando ao banco...
+[2026-04-20 14:03:58.861117] INFO - Tentativa 1 de 3
+[2026-04-20 14:03:59.218379] INFO - Conectando em ambiente local (localhost)
+[2026-04-20 14:03:59.226573] INFO - Tentando conectar ao banco loja_informatica em localhost:3306
+...
+
+```
 
 ## 📌 Diferenciais do Projeto
 * Arquitetura desacoplada (pipeline vs relatório)
@@ -131,19 +174,37 @@ Relatório executivo com:
 * Código organizado e escalável
 * Foco em insight de negócio, não apenas código
 
----
+
 
 ## 📌 Modo de Utilização
 
+1. clone o repositório e acesse o diretório
+```
+git clone https://github.com/jcarlossc/pipeline-mysql-rmarkdown.git
+cd pipeline-mysql-rmarkdown
+```
+2. Restaure as dependências:
+```
+renv::restore()
+```
+3. Gerar relatório PDF:
+* Acesse o arquivo do relatótio: ```pipeline-mysql-rmarkdown/report/report.Rmd``` e clique no botão ```Knit```
+* Ou, acesse o arquivo do relatótio: ```pipeline-mysql-rmarkdown/report/report.Rmd``` e use o atalho ```Ctrl + Shift + K```
+* Ou, simplesmente, no console, digite: ```rmarkdown::render("report/report.Rmd")```
+* Qualquer um desses procedimentos vai gerar um relatório em PDF
 
----
+4. Gerar DashBoard interativo:
+* Acesse o arquivo do DashBoard: ```pipeline-mysql-rmarkdown/app/app.R``` e clique no botão ```Run App```
+* Ou, no console, digite: ```shiny::runApp("app")```
+* Após a abertura de uma janela com o DashBoard, existe um botão na parte superior que, caso queira, o DashBoard poderá ser visualizado, também no navegador. 
 
-📌 Licença
+
+## 📌 Licença
 Este projeto está licenciado sob MIT License.
 
----
 
-📌 Contato
+
+## 📌 Contato
 * Recife, PE - Brasil
 * Telefone: +55 81 99712 9140
 * Telegram: @jcarlossc
