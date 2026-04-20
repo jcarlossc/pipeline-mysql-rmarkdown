@@ -5,7 +5,7 @@
 # Autor: Carlos da Costa
 # Localização: Recife, Pernambuco - Brasil
 # Data de criação: 19/04/2026
-# Última modificação: 19/04/2026
+# Última modificação: 20/04/2026
 # Versão: 1.0.0
 # Ambiente: development
 #
@@ -29,6 +29,7 @@ library(here)
 library(ggplot2)
 library(scales)
 library(shinydashboard)
+library(logger)
 
 # --------------------------------------------------------
 # Importe do arquivo main
@@ -46,6 +47,8 @@ sales <- kpis$sales
 products <- kpis$products
 # Métricas dos vendedores
 seller <- kpis$seller
+
+log_info("Início da geração do DashBoard")
 
 # --------------------------------------------------------
 # Função padrão real(Br)
@@ -110,7 +113,7 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(
-                  title = "Resumo Executivo",
+                  tags$h1("Resumo Executivo"),
                   width = 12,
                   status = "success",
                   
@@ -146,7 +149,7 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(
-                  title = "Faturamento por Produto",
+                  tags$h1("Faturamento por Produto"),
                   width = 12,
                   status = "success",
                   
@@ -182,7 +185,7 @@ ui <- dashboardPage(
                     de otimização do portfólio, com foco em maximizar 
                     rentabilidade e eficiência operacional.")
                 )
-              )
+            )
       ),
       
       # --------------------------------------------------------
@@ -192,6 +195,48 @@ ui <- dashboardPage(
               
               fluidRow(
                 box(width = 12, plotOutput("plot_vendedores"))
+              ),
+              fluidRow(
+                box(
+                  tags$h1("Faturamento por Produto"),
+                  width = 12,
+                  status = "success",
+                  
+                  p("A análise de faturamento por vendedor evidencia 
+                  diferenças relevantes de desempenho dentro da equipe 
+                  comercial, com destaque para profissionais como 
+                  Marcos Silva e Fernanda Rocha, que lideram em geração 
+                  de receita e demonstram maior eficiência nas vendas."),
+                  
+                  p("Esses resultados indicam não apenas maior volume 
+                  de negociações, mas também possivelmente melhores 
+                  estratégias comerciais, relacionamento com clientes ou 
+                  atuação em produtos de maior valor agregado."),
+                  
+                  p("Por outro lado, observa-se que outros vendedores 
+                  apresentam desempenho inferior, o que pode estar 
+                  associado a fatores como carteira de clientes, experiência 
+                  ou abordagem comercial. Essa variação reforça a 
+                  importância de monitoramento contínuo e desenvolvimento 
+                  da equipe."),
+                  
+                  tags$h3("Principais insights:"),
+                  
+                  p("* Identificação clara dos top performers"),
+                  p("* Existência de gap de performance entre vendedores"),
+                  p("* Potencial de replicação de boas práticas comerciais"),
+                  
+                  tags$h3("Recomentações:"),
+                  
+                  p("* Compartilhar estratégias dos vendedores de melhor 
+                  desempenho"),
+                  p("* Implementar treinamentos direcionados"),
+                  p("* Avaliar distribuição de leads ou carteira de clientes"),
+                  
+                  p("Em síntese, os dados permitem uma visão estratégica 
+                  da equipe, possibilitando ações focadas em maximizar 
+                  resultados e reduzir desigualdades de performance.")
+                )
               )
       )
     )
@@ -245,9 +290,9 @@ server <- function(input, output, session) {
   
   output$ticket <- renderValueBox({
     valueBox(
-      value = dollar(sales$ticket_medio, prefix = "R$ "),
+      value = format_real(sales$ticket_medio),
       subtitle = "Ticket Médio",
-      color = "yellow",
+      color = "orange",
       icon = icon("shopping-cart")
     )
   })
@@ -264,9 +309,33 @@ server <- function(input, output, session) {
     ) %>%
       ggplot(aes(indicador, valor, fill = indicador)) +
       geom_col(width = 0.6, show.legend = FALSE) +
-      geom_text(aes(label = format_real(valor)), vjust = -0.5) +
-      theme_minimal() +
-      labs(title = "Indicadores Gerais")
+      geom_text(
+        aes(label = format_real(valor)),
+        vjust = -0.5,
+        size = 5,              
+        fontface = "bold"
+      ) +
+      scale_fill_manual(
+        values = c(
+          "Faturamento" = "#2C7BE5",   
+          "Lucro" = "#00A65A",        
+          "Ticket Médio" = "#F39C12"   
+        )
+      ) +
+      scale_y_continuous(
+        labels = scales::label_dollar(
+          prefix = "R$ ",
+          big.mark = ".",
+          decimal.mark = ","
+        )
+      ) +
+      theme_minimal(base_size = 14
+      ) +
+      labs(
+        title = "Indicadores Gerais",
+        x = "Indicador",
+        y = "Valor (R$)"
+      ) 
   })
   
   # --------------------------------------------------------
@@ -284,9 +353,10 @@ server <- function(input, output, session) {
       geom_text(
         aes(label = format_real(lucro)),
         hjust = 1.1,
-        color = "white"
+        color = "white",
+        size = 5,              
+        fontface = "bold"
       ) +
-      
       coord_flip() +
       
       scale_y_continuous(
@@ -297,10 +367,16 @@ server <- function(input, output, session) {
         ),
         expand = expansion(mult = c(0, 0.05))
       ) +
-      
-      labs(title = "Lucro por Produto") +
-      
-      theme_minimal()
+      labs(
+        title = "Lucro por Produto",
+        x = "Produtos",
+        y = "Lucro (R$)"
+      ) +
+      theme_minimal(base_size = 12) +
+      theme(
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold")
+      ) 
   })
   
   # --------------------------------------------------------
@@ -318,7 +394,16 @@ server <- function(input, output, session) {
         decimal.mark = ","
       )) +
       labs(title = "Volume vs Lucro") +
-      theme_minimal()
+      labs(
+        title = "Lucro por Produto",
+        x = "Total Vendido",
+        y = "Lucro (R$)"
+      ) +
+      theme_minimal(base_size = 12) +
+      theme(
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold")
+      ) 
   })
   
   # --------------------------------------------------------
@@ -336,6 +421,8 @@ server <- function(input, output, session) {
       geom_text(
         aes(label = format_real(faturamento)),
         hjust = 1.1,
+        size = 5,              
+        fontface = "bold",
         color = "white"
       ) +
       
@@ -351,10 +438,20 @@ server <- function(input, output, session) {
       ) +
       
       labs(title = "Faturamento por Vendedor") +
-      
-      theme_minimal()
+      labs(
+        title = "Faturamento por Vendedor",
+        x = "Vendedores",
+        y = "Faturamento"
+      ) +
+      theme_minimal(base_size = 12) +
+      theme(
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold")
+      ) 
   })
 }
+
+log_info("Término da geração do DashBoard")
 
 # --------------------------------------------------------
 # Run App
