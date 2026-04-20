@@ -31,6 +31,10 @@ O objetivo é simular um cenário real de negócio, entregando insights acionáv
 ```
 pipeline-mysql-rmarkdown/
 |
+├── app/
+│     └── app.R
+├── script_database/
+│     └── loja_informatica.sql
 ├── .gitignore
 ├── .RData
 ├── .Rhistory
