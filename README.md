@@ -87,6 +87,9 @@ pipeline-mysql-rmarkdown/
 | DBI | Interface padão para banco de dados |
 | RMySQL | Drive que conecta DBI ao MySQL/MariaDB |
 | shiny | DashBoard interativo |
+| XAMPP | Pacote de software livre e gratuito |
+| apache | Servidor local |
+| MySQL | Banco de Dados |  
 
 ## 📌 Métricas Analisadas
 
@@ -174,22 +177,31 @@ Exemplo:<br>
 
 ## 📌 Modo de Utilização
 
-### 1. clone o repositório e acesse o diretório
+### 1. Execute o XAMPP
+* Caso não o tenha, baixe-o: <a href="https://www.apachefriends.org/pt_br/download.html">https://www.apachefriends.org/pt_br/download.html</a>
+* Instale-o normalmente
+* Execute o Painel de Controle
+* Acione o Apache e o MySQL/MariaDB
+* Ao lado do botão start/stop, clique em Admin. Isso irá abrir a interface do MySQL/MariaDB no navegador
+* Clique na aba importar e em escolher arquivo: o script está na raiz do projeto: ```script_database/loja_informatica.sql```, após isso, clique em importar no final da página
+* O banco de Dados está com usuário ```root``` e senha vazia. O arquivo de configuração está em: ```config/db.yaml```
+
+### 2. Clone o repositório e acesse o diretório
 ```
 git clone https://github.com/jcarlossc/pipeline-mysql-rmarkdown.git
 cd pipeline-mysql-rmarkdown
 ```
-### 2. Restaure as dependências:
+### 3. Restaure as dependências:
 ```
 renv::restore()
 ```
-### 3. Gerar relatório PDF:
+### 4. Gerar relatório PDF:
 * Acesse o arquivo do relatótio: ```pipeline-mysql-rmarkdown/report/report.Rmd``` e clique no botão ```Knit```
 * Ou, acesse o arquivo do relatótio: ```pipeline-mysql-rmarkdown/report/report.Rmd``` e use o atalho ```Ctrl + Shift + K```
 * Ou, simplesmente, no console, digite: ```rmarkdown::render("report/report.Rmd")```
 * Qualquer um desses procedimentos vai gerar um relatório em PDF
 
-### 4. Gerar DashBoard interativo:
+### 5. Gerar DashBoard interativo:
 * Acesse o arquivo do DashBoard: ```pipeline-mysql-rmarkdown/app/app.R``` e clique no botão ```Run App```
 * Ou, no console, digite: ```shiny::runApp("app")```
 * Após abertura de uma janela com o DashBoard, existe um botão na parte superior que, caso queira, o DashBoard poderá ser visualizado, também no navegador. 
