@@ -94,7 +94,7 @@ get_db_connection <- function() {
     # Aviso de ambiente (exemplo de WARN útil)
     # -----------------------------------------------------
     if (db_config$host %in% c("localhost", "127.0.0.1")) {
-      log_warn("Conectando em ambiente local (localhost)")
+      log_info("Conectando em ambiente local (localhost)")
     }
     
     # -----------------------------------------------------
